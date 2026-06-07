@@ -1,0 +1,75 @@
+import java.util.*;
+
+public class MaximunColumnValue
+{
+    public static void main(String[] args)
+    {
+        Scanner sc = new Scanner(System.in);
+
+        int rows = sc.nextInt();
+        int cols = sc.nextInt();
+
+        int[][] matrix = new int[rows][cols];
+
+        for(int i = 0; i < rows; i++)
+        {
+            for(int j = 0; j < cols; j++)
+            {
+                matrix[i][j] = sc.nextInt();
+            }
+        }
+
+        int[][] res = new int[rows][cols];
+
+        // Copy first column
+        for(int i = 0; i < rows; i++)
+        {
+            res[i][0] = matrix[i][0];
+        }
+
+        // Traverse columns
+        for(int j = 1; j < cols; j++)
+        {
+            int fmax = Integer.MIN_VALUE;
+            int smax = Integer.MIN_VALUE;
+            int maxc = -1;
+
+            // Find largest and second largest from previous column
+            for(int i = 0; i < rows; i++)
+            {
+                if(res[i][j - 1] > fmax)
+                {
+                    smax = fmax;
+                    fmax = res[i][j - 1];
+                    maxc = i;
+                }
+                else if(res[i][j - 1] > smax)
+                {
+                    smax = res[i][j - 1];
+                }
+            }
+
+            // Fill current column
+            for(int i = 0; i < rows; i++)
+            {
+                if(i == maxc)
+                {
+                    res[i][j] = matrix[i][j] + smax;
+                }
+                else
+                {
+                    res[i][j] = matrix[i][j] + fmax;
+                }
+            }
+        }
+
+        int finalans = Integer.MIN_VALUE;
+
+        for(int i = 0; i < rows; i++)
+        {
+            finalans = Math.max(finalans, res[i][cols - 1]);
+        }
+
+        System.out.println("Maximum value: " + finalans);
+    }
+}
