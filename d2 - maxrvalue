@@ -1,0 +1,65 @@
+import java.util.*;
+
+public class MaxGridScore {
+    public static void main(String[] args) {
+
+        Scanner input = new Scanner(System.in);
+
+        int rows = input.nextInt();
+        int cols = input.nextInt();
+
+        int[][] matrix = new int[rows][cols];
+
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                matrix[row][col] = input.nextInt();
+            }
+        }
+
+        int[][] result = new int[rows][cols];
+
+        // Initialize first row
+        for (int col = 0; col < cols; col++) {
+            result[0][col] = matrix[0][col];
+        }
+
+        for (int row = 1; row < rows; row++) {
+
+            int largest = Integer.MIN_VALUE;
+            int secondLargest = Integer.MIN_VALUE;
+            int largestIndex = -1;
+
+            // Find top two values from previous row
+            for (int col = 0; col < cols; col++) {
+
+                if (result[row - 1][col] > largest) {
+                    secondLargest = largest;
+                    largest = result[row - 1][col];
+                    largestIndex = col;
+                } 
+                else if (result[row - 1][col] > secondLargest) {
+                    secondLargest = result[row - 1][col];
+                }
+            }
+
+            // Build current row values
+            for (int col = 0; col < cols; col++) {
+
+                int bestPrevious =
+                        (col == largestIndex) ? secondLargest : largest;
+
+                result[row][col] = matrix[row][col] + bestPrevious;
+            }
+        }
+
+        int maxScore = Integer.MIN_VALUE;
+
+        for (int col = 0; col < cols; col++) {
+            maxScore = Math.max(maxScore, result[rows - 1][col]);
+        }
+
+        System.out.println("Maximum value: " + maxScore);
+
+        
+    }
+}
